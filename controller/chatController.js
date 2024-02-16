@@ -11,7 +11,7 @@ module.exports={
             res.status(200).json({ success: true, message: "Registration successful",
 								   answer: result.answer, feedback: result.feedback });
         } else {
-            res.status(500).json({ success: false, message: "Registration failed", error: registrationResult.error });
+            res.status(500).json({ success: false, message: "Registration failed", error: result.error });
         }
     },
 	main: async function (req, res) {
