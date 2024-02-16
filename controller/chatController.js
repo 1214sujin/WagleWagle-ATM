@@ -33,8 +33,8 @@ module.exports={
         }
     },
 	main: async function (req, res) {
-		const { user } = {user: '1111'}//req.session
-		const { last_chat } = {last_chat: 27}//req.body
+		const { user } = req.session
+		const { last_chat } = req.body
         const result = await db_exec.main(user, last_chat);
     
         if (result.success) {

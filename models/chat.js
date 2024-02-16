@@ -7,13 +7,13 @@ async function chat(uid, descript) {
 		// 유저의 질문을 DB에 저장
         const conn = await returnConn();
         const userChat = "INSERT INTO chat(uid, descript, chat_time, speaker) VALUES (?, ?, now(), ?)";
-        await conn.query(userChat, [uid, descript, 1])
+        var chat_id = await conn.query(userChat, [uid, descript, 1])
 
-		// // GPT의 답변을 DB에 저장
+		// GPT의 답변을 DB에 저장
 		var answer = await answerCall(descript)
 		console.log(`answer in chat.js: `, answer)
 		const GPTChat = "INSERT INTO chat(uid, descript, chat_time, speaker) VALUES (?, ?, now(), ?)";
-		var chat_id = await conn.query(GPTChat, [uid, answer, 0])
+		await conn.query(GPTChat, [uid, answer, 0])
 
 		// GPT의 피드백을 DB에 저장
 		var feedback = await feedbackCall(descript)
@@ -34,23 +34,16 @@ async function main(uid, last_chat) {
 		// 유저의 채팅 기록 받기
 		const conn = await returnConn();
 		var chatList
-		var last_chat_id
 		if (last_chat == -1) {
 			const chat = "select * from chat left join feedback on chat_id=p_id where uid=? order by chat_id desc limit 10;";
 			var result = await conn.query(chat, [uid])
 			chatList = result[0]
-			console.log(chatList)
-
-			last_chat_id = chatList[5].chat_id
-			console.log(last_chat_id)
 		} else {
 			const chat = "select * from chat left join feedback on chat_id=p_id where uid=? and chat_id<? order by chat_id desc limit 10;";
 			var result = await conn.query(chat, [uid, last_chat])
 			chatList = result[0]
-			console.log(chatList)
-			last_chat_id = chatList[5].chat_id
-			console.log(last_chat_id)
 		}
+		var last_chat_id = chatList[9].chat_id
 		await conn.end()
 
         return { success: true, message: "Registration successful", chatList: chatList, last_chat: last_chat_id };
