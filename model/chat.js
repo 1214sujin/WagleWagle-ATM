@@ -1,4 +1,5 @@
-const gpt_api=require('../lib/GPTAPI')
+const { answerCall } = require('../lib/answer')
+const { feedbackCall }=require('../lib/feedback')
 let {returnConn}=require('../db/db_init')
 
 async function chat(uid, descript) {
@@ -6,18 +7,22 @@ async function chat(uid, descript) {
 		// 유저의 질문을 DB에 저장
         const conn = await returnConn();
         const userChat = "INSERT INTO chat(uid, descript, chat_time, speaker) VALUES (?, ?, now(), ?)";
-        await conn.query(userChat, [uid, descript, 1]);
-        await conn.execute
+        await conn.query(userChat, [uid, descript, 1])
 
-		// GPT의 답변을 DB에 저장
-		var answer = gpt_api.APIcall(descript)
+		// // GPT의 답변을 DB에 저장
+		var answer = await answerCall(descript)
+		console.log(`answer in chat.js: `, answer)
 		const GPTChat = "INSERT INTO chat(uid, descript, chat_time, speaker) VALUES (?, ?, now(), ?)";
-		await conn.query(GPTChat, [uid, answer, 0]);
-        await conn.execute
+		var chat_id = await conn.query(GPTChat, [uid, answer, 0])
+
+		// GPT의 피드백을 DB에 저장
+		var feedback = await feedbackCall(descript)
+		console.log(`feedback in chat.js: `, feedback)
+		const GPTFeedback = "INSERT INTO feedback(descript, p_id) VALUES (?, ?)";
+		await conn.query(GPTFeedback, [feedback, chat_id])
         await conn.end()
 
-		console.log(`GPT's answer: `, answer)
-        return { success: true, message: "Registration successful", answer: answer };
+        return { success: true, message: "Registration successful", answer: answer, feedback: feedback };
     } catch (error) {
         console.error('Error during registration:', error);
         return { success: false, message: "Registration failed", error: error.message };
