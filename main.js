@@ -1,4 +1,5 @@
 const express = require('express')
+const session=require("express-session")
 const app = express()
 
 // var login = require('./db/session')
@@ -11,6 +12,13 @@ const router=require("./routes/route")
 
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
+
+app.use(session({
+    secret: 'super-secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, 
+}));
 
 app.use("/",router)
 

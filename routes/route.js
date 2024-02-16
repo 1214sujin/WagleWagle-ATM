@@ -1,8 +1,10 @@
 const express=require("express")
-const controller=require("../controller/userController")
+const userController=require("../controller/userController")
 const router=express.Router()
 
-router.post("/register",controller.doRegister)
-router.post("/login",controller.doLogin)
+router.post("/register",userController.doRegister)
+router.post("/login",userController.doLogin)
+router.post("/logout",userController.doLogout)
+router.post("/chat")
 
 module.exports=router
