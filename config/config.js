@@ -1,0 +1,9 @@
+module.exports={
+    db_conn_info:{
+        host:'127.0.0.1',
+        port:'3306',
+        user:'mrchat',
+        password:'atm4040',
+        database:'mrchat'
+    }
+}
