@@ -1,4 +1,5 @@
 module.exports={
+    OPENAI_SECRET_KEY:"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",
     db_conn_info:{
         host:'127.0.0.1',
         port:'3306',

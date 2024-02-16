@@ -1,5 +1,4 @@
 const db_exec=require('../models/user')
-// const sess=require("../middle/sessionCheck")
 
 module.exports={
     doRegister: async function (req, res) {
