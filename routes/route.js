@@ -8,6 +8,6 @@ router.post("/login",userController.doLogin)
 router.post("/logout",userController.doLogout)
 
 router.post("/main", chatController.main)
-router.post("/chat", chatController.chat)
+router.get("/chat", chatController.chat)
 
 module.exports=router

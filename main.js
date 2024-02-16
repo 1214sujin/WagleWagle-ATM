@@ -1,12 +1,8 @@
 const express = require('express')
 const session=require("express-session")
 const app = express()
+const http = require('http');
 
-// var login = require('./db/session')
-// login.session(app)
-
-// const http=require("http")
-// const server=http.createServer(app)
 const bodyParser=require("body-parser")
 const router=require("./routes/route")
 

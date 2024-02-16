@@ -1,16 +1,35 @@
-const db_exec=require('../model/chat')
+const db_exec=require('../models/chat')
+let chat_list={}
 
 module.exports={
     chat: async function (req, res) {
-		const { user } = {user: '1111'}//req.session
-        const { descript } = req.body
-        const result = await db_exec.chat(user, descript);
+        try {
+            let chat_no = req.query.id;
+            let message = req.query.message;
     
-        if (result.success) {
-            res.status(200).json({ success: true, message: "Registration successful",
-								   answer: result.answer, feedback: result.feedback });
-        } else {
-            res.status(500).json({ success: false, message: "Registration failed", error: registrationResult.error });
+            // Check if chat_no already exists in chat_list, if not, create an empty array
+            if (!chat_list[chat_no]) {
+                chat_list[chat_no] = [];
+            }
+    
+            // Push the new message to the chat list for the specified chat_no
+            chat_list[chat_no].push(message);
+    
+            console.log(chat_list);
+    
+            res.status(200).json({
+                success: true,
+                message: {
+                    chat_no: chat_no,
+                    c_message: chat_list[chat_no]
+                }
+            });
+        } catch (error) {
+            console.error("Error in chat function:", error);
+            res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
         }
     },
 	main: async function (req, res) {
