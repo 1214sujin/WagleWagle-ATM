@@ -4,7 +4,7 @@ module.exports={
     chat: async function (req, res) {
 		const { uid } = req.session
         const { descript } = req.body
-        const result = await db_exec.chat(uid, descript);
+        const result = await db_exec.register(uid, descript);
     
         if (result.success) {
             res.status(200).json({ success: true, message: "Registration successful", answer: result.answer });
