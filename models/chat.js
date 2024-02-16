@@ -34,6 +34,7 @@ async function main(uid, last_chat) {
 		// 유저의 채팅 기록 받기
 		const conn = await returnConn();
 		var chatList
+		var last_chat_id
 		if (last_chat == -1) {
 			const chat = "select * from chat left join feedback on chat_id=p_id where uid=? order by chat_id desc limit 10;";
 			var result = await conn.query(chat, [uid])
@@ -43,8 +44,12 @@ async function main(uid, last_chat) {
 			var result = await conn.query(chat, [uid, last_chat])
 			chatList = result[0]
 		}
-		var last_chat_id = chatList[9].chat_id
 		await conn.end()
+		if (chatList.length < 10) {
+			last_chat_id = -2
+		} else {
+			last_chat_id = chatList[chatList.length-1].chat_id
+		}
 
         return { success: true, message: "Registration successful", chatList: chatList, last_chat: last_chat_id };
     } catch (error) {
