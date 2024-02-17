@@ -20,7 +20,7 @@ module.exports={
             res.status(401).json({ success: false, message: "Already Exist Session" });
         }else{
             if (loginResult.success) {
-                req.session.user={id,pw}
+                req.session.user=id
                 req.session.save()
                 res.status(200).json({ success: true, message: "Login successful" });
             } else {
@@ -32,10 +32,17 @@ module.exports={
     doLogout: async function(req,res){
         req.session.destroy(function(err){
             if(err) {
-                res.status(500).json({ success: true, message: "Logout successful" });
+                res.status(500).json({ success:false, message: "Logout Failed" });
                 throw err
             }
         })
         res.status(200).json({ success: true, message: "Logout successful" });
+    },
+    sessionStatus: async function(req,res){
+        if(req.session.user){
+                res.status(200).json({"status":true,message:"Session Exist"})
+        }else{
+                res.status(401).json({"status":false,message:"UNAUTHORIZED"})
+        }
     }
 }
